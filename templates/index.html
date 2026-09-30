@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopVista - E-Commerce Business Analysis Dashboard</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        'primary-dark': '#1d4ed8',
+                        'slate-surface': '#f8fafc',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased flex min-h-screen">
+
+    <!-- ======================================================== -->
+    <!-- 1. LEFT SIDEBAR -->
+    <!-- ======================================================== -->
+    <aside class="w-60 bg-white border-r border-slate-200/80 flex flex-col justify-between p-4 flex-shrink-0 sticky top-0 h-screen z-20">
+        <div>
+            <!-- Brand Logo -->
+            <div class="flex items-center gap-2.5 px-3 py-3 mb-6">
+                <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-sm shadow-blue-500/20">
+                    <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+                </div>
+                <span class="text-xl font-extrabold tracking-tight text-slate-900">ShopVista</span>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="space-y-1">
+                <a href="#" data-target="dashboard" class="nav-link active flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 transition-all">
+                    <i data-lucide="layout-dashboard" class="w-4 h-4 text-slate-400"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" data-target="sales" class="nav-link flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 transition-all">
+                    <i data-lucide="trending-up" class="w-4 h-4 text-slate-400"></i>
+                    <span>Sales Analysis</span>
+                </a>
+                <a href="#" data-target="customers" class="nav-link flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 transition-all">
+                    <i data-lucide="users" class="w-4 h-4 text-slate-400"></i>
+                    <span>Customer Analysis</span>
+                </a>
+                <a href="#" data-target="products" class="nav-link flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 transition-all">
+                    <i data-lucide="shopping-bag" class="w-4 h-4 text-slate-400"></i>
+                    <span>Product Analysis</span>
+                </a>
+                <a href="#" data-target="orders" class="nav-link flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 transition-all">
+                    <i data-lucide="clipboard-list" class="w-4 h-4 text-slate-400"></i>
+                    <span>Order Analysis</span>
+                </a>
+                <a href="#" data-target="reports" class="nav-link flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 transition-all">
+                    <i data-lucide="file-text" class="w-4 h-4 text-slate-400"></i>
+                    <span>Reports</span>
+                </a>
+                <a href="#" data-target="settings" class="nav-link flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 transition-all">
+                    <i data-lucide="settings" class="w-4 h-4 text-slate-400"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Sidebar Bottom Card -->
+        <div class="bg-blue-50/70 border border-blue-100 rounded-2xl p-4 text-left">
+            <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center mb-2.5">
+                <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+            </div>
+            <h4 class="text-xs font-bold text-slate-800">E-Commerce Analytics</h4>
+            <p class="text-[11px] text-slate-500 mt-0.5 leading-snug">Better insights. Smarter decisions.</p>
+        </div>
+    </aside>
+
+    <!-- ======================================================== -->
+    <!-- 2. MAIN WORKSPACE AREA -->
+    <!-- ======================================================== -->
+    <div class="flex-1 flex flex-col min-w-0">
+        <!-- Top Navbar -->
+        <header class="bg-white border-b border-slate-200/80 px-8 py-3.5 flex items-center justify-between sticky top-0 z-10">
+            <!-- Global Search -->
+            <div class="relative w-96">
+                <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                <input 
+                    type="text" 
+                    id="globalSearchInput"
+                    placeholder="Search anything..." 
+                    class="w-full bg-slate-50/80 border border-slate-200/80 rounded-xl pl-10 pr-4 py-2 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                >
+            </div>
+
+            <!-- Profile & Notifications -->
+            <div class="flex items-center gap-5">
+                <!-- Notification Bell -->
+                <button class="relative text-slate-500 hover:text-slate-800 p-1.5 rounded-lg hover:bg-slate-100 transition-colors">
+                    <i data-lucide="bell" class="w-5 h-5"></i>
+                    <span class="absolute top-1 right-1 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white"></span>
+                </button>
+
+                <!-- User Profile -->
+                <div class="flex items-center gap-3 pl-2 border-l border-slate-100">
+                    <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-slate-700 to-slate-900 text-white font-bold text-xs flex items-center justify-center ring-2 ring-slate-100 overflow-hidden shadow-inner">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80" alt="Arif Khan" class="w-full h-full object-cover">
+                    </div>
+                    <div class="text-left">
+                        <div class="text-xs font-bold text-slate-900 leading-tight">Arif Khan</div>
+                        <div class="text-[11px] text-slate-400 font-medium">Business Analyst</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dynamic Container (Switches between Dashboard and Detailed Views) -->
+        <main class="flex-1 p-8 overflow-y-auto">
+            
+            <!-- VIEW A: MAIN EXECUTIVE OVERVIEW DASHBOARD -->
+            <div id="view-dashboard" class="flex flex-col lg:flex-row gap-6">
+                
+                <!-- Main Analytics Area (Left 2-Column Wide Section) -->
+                <div class="flex-1 space-y-6 min-w-0">
+                    
+                    <!-- Dashboard Header -->
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div>
+                            <h1 class="text-2xl font-bold tracking-tight text-slate-900">Executive Overview</h1>
+                            <p class="text-xs text-slate-500 mt-0.5">Key business metrics and performance insights</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="inline-flex items-center gap-2 bg-white border border-slate-200/80 rounded-xl px-3.5 py-1.5 text-xs font-medium text-slate-600 shadow-sm cursor-pointer hover:bg-slate-50">
+                                <i data-lucide="calendar" class="w-3.5 h-3.5 text-slate-400"></i>
+                                <span>Jan 2024 &nbsp;–&nbsp; Dec 2024</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row 1: 4 KPI Cards -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+                        
+                        <!-- KPI 1: Total Revenue -->
+                        <div class="bg-white rounded-2xl p-4 border border-blue-100/70 shadow-sm relative overflow-hidden">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 font-bold flex items-center justify-center text-lg shadow-inner">
+                                    ₹
+                                </div>
+                                <div>
+                                    <div class="text-xs font-medium text-slate-500">Total Revenue</div>
+                                    <div class="text-xl font-extrabold text-slate-900 mt-0.5">{{ data.kpis.revenue.display }}</div>
+                                </div>
+                            </div>
+                            <div class="mt-3 flex items-center text-xs font-semibold text-emerald-600 gap-1">
+                                <span>↑ {{ data.kpis.revenue.growth }}%</span>
+                                <span class="font-normal text-slate-400 text-[11px]">{{ data.kpis.revenue.period }}</span>
+                            </div>
+                        </div>
+
+                        <!-- KPI 2: Total Orders -->
+                        <div class="bg-white rounded-2xl p-4 border border-emerald-100/70 shadow-sm relative overflow-hidden">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shadow-inner">
+                                    <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs font-medium text-slate-500">Total Orders</div>
+                                    <div class="text-xl font-extrabold text-slate-900 mt-0.5">{{ data.kpis.orders.display }}</div>
+                                </div>
+                            </div>
+                            <div class="mt-3 flex items-center text-xs font-semibold text-emerald-600 gap-1">
+                                <span>↑ {{ data.kpis.orders.growth }}%</span>
+                                <span class="font-normal text-slate-400 text-[11px]">{{ data.kpis.orders.period }}</span>
+                            </div>
+                        </div>
+
+                        <!-- KPI 3: Total Customers -->
+                        <div class="bg-white rounded-2xl p-4 border border-purple-100/70 shadow-sm relative overflow-hidden">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shadow-inner">
+                                    <i data-lucide="users" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs font-medium text-slate-500">Total Customers</div>
+                                    <div class="text-xl font-extrabold text-slate-900 mt-0.5">{{ data.kpis.customers.display }}</div>
+                                </div>
+                            </div>
+                            <div class="mt-3 flex items-center text-xs font-semibold text-emerald-600 gap-1">
+                                <span>↑ {{ data.kpis.customers.growth }}%</span>
+                                <span class="font-normal text-slate-400 text-[11px]">{{ data.kpis.customers.period }}</span>
+                            </div>
+                        </div>
+
+                        <!-- KPI 4: Average Order Value -->
+                        <div class="bg-white rounded-2xl p-4 border border-amber-100/70 shadow-sm relative overflow-hidden">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 font-bold flex items-center justify-center text-lg shadow-inner">
+                                    ₹
+                                </div>
+                                <div>
+                                    <div class="text-xs font-medium text-slate-500">Average Order Value</div>
+                                    <div class="text-xl font-extrabold text-slate-900 mt-0.5">{{ data.kpis.aov.display }}</div>
+                                </div>
+                            </div>
+                            <div class="mt-3 flex items-center text-xs font-semibold text-emerald-600 gap-1">
+                                <span>↑ {{ data.kpis.aov.growth }}%</span>
+                                <span class="font-normal text-slate-400 text-[11px]">{{ data.kpis.aov.period }}</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Row 2: Charts (Revenue Trend & Orders Trend) -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        
+                        <!-- Revenue Trend Chart -->
+                        <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-xs font-bold text-slate-800 tracking-tight">Revenue Trend</h3>
+                                <div class="flex items-center gap-1.5 text-xs text-slate-500">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+                                    <span class="text-[11px] font-medium text-slate-600">Revenue</span>
+                                </div>
+                            </div>
+                            <div class="h-56 w-full">
+                                <canvas id="revenueTrendChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Orders Trend Chart -->
+                        <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-xs font-bold text-slate-800 tracking-tight">Orders Trend</h3>
+                                <div class="flex items-center gap-1.5 text-xs text-slate-500">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                                    <span class="text-[11px] font-medium text-slate-600">Orders</span>
+                                </div>
+                            </div>
+                            <div class="h-56 w-full">
+                                <canvas id="ordersTrendChart"></canvas>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Row 3: Breakdown (Revenue by Category & Orders by City) -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        
+                        <!-- Revenue by Category -->
+                        <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex flex-col justify-between">
+                            <h3 class="text-xs font-bold text-slate-800 tracking-tight mb-2">Revenue by Category</h3>
+                            
+                            <div class="flex items-center gap-4">
+                                <!-- Donut Chart with Center Text -->
+                                <div class="relative w-44 h-44 flex-shrink-0">
+                                    <canvas id="categoryDonutChart"></canvas>
+                                    <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
+                                        <span class="text-sm font-extrabold text-slate-900 leading-tight">₹ 48.75M</span>
+                                        <span class="text-[10px] text-slate-400 font-medium leading-none">Total Revenue</span>
+                                    </div>
+                                </div>
+
+                                <!-- Custom Category Legend matching UI -->
+                                <div class="flex-1 space-y-2 text-xs">
+                                    {% for cat in data.category_breakdown %}
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center gap-2">
+                                            <span class="w-2 h-2 rounded-full" style="background-color: {{ cat.color }}"></span>
+                                            <span class="text-slate-600 text-[11px]">{{ cat.category }}</span>
+                                        </div>
+                                        <span class="font-bold text-slate-800 text-[11px]">{{ cat.percentage }}%</span>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Orders by City -->
+                        <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex flex-col justify-between">
+                            <h3 class="text-xs font-bold text-slate-800 tracking-tight mb-2">Orders by City</h3>
+                            <div class="h-44 w-full">
+                                <canvas id="cityBarChart"></canvas>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Row 4: Top 5 Products & Order Status -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        
+                        <!-- Top 5 Products -->
+                        <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm">
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="text-xs font-bold text-slate-800 tracking-tight">Top 5 Products</h3>
+                                <a href="#" onclick="switchSection('products')" class="text-blue-600 text-xs font-semibold hover:underline flex items-center gap-1">
+                                    View All <i data-lucide="arrow-right" class="w-3 h-3"></i>
+                                </a>
+                            </div>
+                            
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left text-xs">
+                                    <thead>
+                                        <tr class="text-slate-400 border-b border-slate-100 font-semibold text-[11px]">
+                                            <th class="pb-2">#</th>
+                                            <th class="pb-2">Product Name</th>
+                                            <th class="pb-2">Category</th>
+                                            <th class="pb-2">Sales</th>
+                                            <th class="pb-2 text-right">Orders</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="topProductsTableBody" class="divide-y divide-slate-50">
+                                        {% for prod in data.top_products %}
+                                        <tr class="hover:bg-slate-50/50 transition-colors">
+                                            <td class="py-2 text-slate-400 font-medium">{{ prod.id }}</td>
+                                            <td class="py-2">
+                                                <div class="flex items-center gap-2">
+                                                    <div class="w-6 h-6 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600 flex-shrink-0">
+                                                        <i data-lucide="{{ prod.icon }}" class="w-3.5 h-3.5"></i>
+                                                    </div>
+                                                    <span class="font-semibold text-slate-800">{{ prod.name }}</span>
+                                                </div>
+                                            </td>
+                                            <td class="py-2 text-slate-500">{{ prod.category }}</td>
+                                            <td class="py-2 font-medium text-slate-800">{{ prod.sales_formatted }}</td>
+                                            <td class="py-2 text-right font-medium text-slate-600">{{ prod.orders }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Order Status -->
+                        <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex flex-col justify-between">
+                            <h3 class="text-xs font-bold text-slate-800 tracking-tight mb-2">Order Status</h3>
+                            
+                            <div class="flex items-center gap-4">
+                                <!-- Donut Chart with Center Text -->
+                                <div class="relative w-44 h-44 flex-shrink-0">
+                                    <canvas id="orderStatusChart"></canvas>
+                                    <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
+                                        <span class="text-sm font-extrabold text-slate-900 leading-tight">8,492</span>
+                                        <span class="text-[10px] text-slate-400 font-medium leading-none">Total Orders</span>
+                                    </div>
+                                </div>
+
+                                <!-- Custom Status Legend matching UI -->
+                                <div class="flex-1 space-y-2 text-xs">
+                                    {% for stat in data.order_status %}
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center gap-2">
+                                            <span class="w-2 h-2 rounded-full" style="background-color: {{ stat.color }}"></span>
+                                            <span class="text-slate-600 text-[11px]">{{ stat.status }}</span>
+                                        </div>
+                                        <span class="font-bold text-slate-800 text-[11px]">{{ stat.percentage }}%</span>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Row 5: Business Recommendations Card -->
+                    <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm">
+                        <div class="flex items-center gap-2 mb-4">
+                            <div class="w-6 h-6 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+                                <i data-lucide="compass" class="w-4 h-4"></i>
+                            </div>
+                            <h3 class="text-xs font-bold text-slate-800 tracking-tight">Business Recommendations</h3>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-xs">
+                            {% for rec in data.business_recommendations %}
+                            <div class="p-3 bg-slate-50/70 rounded-xl border border-slate-100/80">
+                                <div class="text-blue-600 font-extrabold text-sm mb-1">{{ rec.num }}</div>
+                                <div class="font-semibold text-slate-800 leading-snug">{{ rec.title }}</div>
+                                {% if rec.subtitle %}
+                                <div class="text-[11px] text-slate-500 mt-0.5 leading-snug">{{ rec.subtitle }}</div>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- ==================================================== -->
+                <!-- 3. RIGHT SIDEBAR (Quick Insights, Orders, Growth) -->
+                <!-- ==================================================== -->
+                <div class="w-full lg:w-80 space-y-4 flex-shrink-0">
+                    
+                    <!-- Quick Insights -->
+                    <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm">
+                        <div class="flex items-center gap-2 mb-4">
+                            <i data-lucide="lightbulb" class="w-4 h-4 text-blue-600"></i>
+                            <h3 class="text-xs font-bold text-slate-800 tracking-tight">Quick Insights</h3>
+                        </div>
+
+                        <div class="space-y-3.5 text-xs">
+                            <!-- Insight 1: Electronics revenue -->
+                            <div class="flex items-start gap-3">
+                                <div class="w-7 h-7 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
+                                </div>
+                                <p class="text-slate-600 leading-relaxed text-[11px]">
+                                    <strong class="text-slate-800 font-semibold">Electronics</strong> generated the highest revenue (32.4%) followed by Fashion (24.8%) and Home & Living (18.7%).
+                                </p>
+                            </div>
+
+                            <!-- Insight 2: Return rate -->
+                            <div class="flex items-start gap-3">
+                                <div class="w-7 h-7 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i>
+                                </div>
+                                <p class="text-slate-600 leading-relaxed text-[11px]">
+                                    Return rate for Electronics (8.9%) is significantly higher than other categories. Investigate product quality or expectations.
+                                </p>
+                            </div>
+
+                            <!-- Insight 3: Top 5 customers -->
+                            <div class="flex items-start gap-3">
+                                <div class="w-7 h-7 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <i data-lucide="users" class="w-3.5 h-3.5"></i>
+                                </div>
+                                <p class="text-slate-600 leading-relaxed text-[11px]">
+                                    Top 5 customers contribute to 18.6% of total revenue. Consider loyalty programs to improve retention.
+                                </p>
+                            </div>
+
+                            <!-- Insight 4: Average order value -->
+                            <div class="flex items-start gap-3">
+                                <div class="w-7 h-7 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <i data-lucide="percent" class="w-3.5 h-3.5"></i>
+                                </div>
+                                <p class="text-slate-600 leading-relaxed text-[11px]">
+                                    Average order value increased by 3.2% this period. Upsell and cross-sell opportunities are working.
+                                </p>
+                            </div>
+
+                            <!-- Insight 5: Stock-out risk -->
+                            <div class="flex items-start gap-3">
+                                <div class="w-7 h-7 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                    <i data-lucide="package" class="w-3.5 h-3.5"></i>
+                                </div>
+                                <p class="text-slate-600 leading-relaxed text-[11px]">
+                                    12 products are at risk of stock-out in the next 7 days. Plan replenishment accordingly.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Orders -->
+                    <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="text-xs font-bold text-slate-800 tracking-tight">Recent Orders</h3>
+                            <a href="#" onclick="switchSection('orders')" class="text-blue-600 text-xs font-semibold hover:underline flex items-center gap-1">
+                                View All <i data-lucide="arrow-right" class="w-3 h-3"></i>
+                            </a>
+                        </div>
+
+                        <div class="space-y-2 text-xs" id="recentOrdersContainer">
+                            <div class="grid grid-cols-4 text-slate-400 font-semibold text-[10px] pb-1 border-b border-slate-100">
+                                <span>Order ID</span>
+                                <span>Customer</span>
+                                <span>Amount</span>
+                                <span class="text-right">Status</span>
+                            </div>
+
+                            {% for order in data.recent_orders %}
+                            <div class="grid grid-cols-4 items-center py-1.5 text-[11px] border-b border-slate-50 last:border-0">
+                                <span class="font-bold text-slate-700">{{ order.order_id }}</span>
+                                <span class="text-slate-600 truncate pr-1">{{ order.customer }}</span>
+                                <span class="font-semibold text-slate-800">{{ order.amount_formatted }}</span>
+                                <div class="text-right">
+                                    {% if order.status == 'Delivered' %}
+                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700">Delivered</span>
+                                    {% elif order.status == 'Shipped' %}
+                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-blue-50 text-blue-700">Shipped</span>
+                                    {% elif order.status == 'Processing' %}
+                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-700">Processing</span>
+                                    {% elif order.status == 'Cancelled' %}
+                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-rose-50 text-rose-700">Cancelled</span>
+                                    {% else %}
+                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-purple-50 text-purple-700">{{ order.status }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Turn Data Into Growth Card -->
+                    <div class="bg-gradient-to-br from-blue-50/80 to-indigo-50/40 rounded-2xl p-5 border border-blue-100 text-left space-y-3">
+                        <div class="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-sm shadow-blue-500/30">
+                            <i data-lucide="rocket" class="w-4 h-4"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-900">Turn Data Into Growth</h4>
+                            <p class="text-[11px] text-slate-500 mt-1 leading-relaxed">
+                                Use these insights to improve customer satisfaction, increase revenue and make data-driven decisions.
+                            </p>
+                        </div>
+                        <a href="/api/export-report" class="w-full inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs py-2.5 px-4 rounded-xl shadow-sm shadow-blue-500/20 transition-all">
+                            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                            <span>Download Full Report</span>
+                        </a>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- VIEW B: DYNAMIC SUB-PAGE CONTAINER (Sales, Customers, Products, Orders, Reports, Settings) -->
+            <div id="view-dynamic" class="hidden"></div>
+
+        </main>
+    </div>
+
+    <!-- Pass backend dataset directly to JavaScript -->
+    <script>
+        window.DASHBOARD_DATA = {{ data | tojson }};
+    </script>
+    <script src="/static/js/dashboard.js"></script>
+</body>
+</html>
