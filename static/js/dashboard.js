@@ -195,7 +195,7 @@ function initializeCharts() {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                cutout: '74%',
+                cutout: '65%',
                 plugins: {
                     legend: { display: false },
                     tooltip: {
@@ -294,7 +294,7 @@ function initializeCharts() {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                cutout: '74%',
+                cutout: '65%',
                 plugins: {
                     legend: { display: false },
                     tooltip: {

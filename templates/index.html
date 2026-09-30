@@ -252,31 +252,31 @@
                     </div>
 
                     <!-- Row 3: Breakdown (Revenue by Category & Orders by City) -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
                         
                         <!-- Revenue by Category -->
-                        <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex flex-col justify-between">
-                            <h3 class="text-xs font-bold text-slate-800 tracking-tight mb-2">Revenue by Category</h3>
+                        <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex flex-col h-full justify-between">
+                            <h3 class="text-xs font-bold text-slate-800 tracking-tight mb-1">Revenue by Category</h3>
                             
-                            <div class="flex items-center gap-4">
+                            <div class="flex-1 flex items-center justify-between gap-4 py-2">
                                 <!-- Donut Chart with Center Text -->
-                                <div class="relative w-44 h-44 flex-shrink-0">
+                                <div class="relative w-36 h-36 flex-shrink-0 flex items-center justify-center">
                                     <canvas id="categoryDonutChart"></canvas>
-                                    <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
+                                    <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center select-none">
                                         <span class="text-sm font-extrabold text-slate-900 leading-tight">₹ 48.75M</span>
-                                        <span class="text-[10px] text-slate-400 font-medium leading-none">Total Revenue</span>
+                                        <span class="text-[10px] text-slate-400 font-medium leading-none mt-0.5">Total Revenue</span>
                                     </div>
                                 </div>
 
                                 <!-- Custom Category Legend matching UI -->
-                                <div class="flex-1 space-y-2 text-xs">
+                                <div class="flex-1 min-w-0 space-y-2 text-xs">
                                     {% for cat in data.category_breakdown %}
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex items-center gap-2">
-                                            <span class="w-2 h-2 rounded-full" style="background-color: {{ cat.color }}"></span>
-                                            <span class="text-slate-600 text-[11px]">{{ cat.category }}</span>
+                                    <div class="flex items-center justify-between text-xs py-0.5">
+                                        <div class="flex items-center gap-2 min-w-0 pr-2">
+                                            <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: {{ cat.color }}"></span>
+                                            <span class="text-slate-600 text-[11px] font-medium truncate">{{ cat.category }}</span>
                                         </div>
-                                        <span class="font-bold text-slate-800 text-[11px]">{{ cat.percentage }}%</span>
+                                        <span class="font-bold text-slate-800 text-[11px] flex-shrink-0 tabular-nums">{{ cat.percentage }}%</span>
                                     </div>
                                     {% endfor %}
                                 </div>
@@ -284,20 +284,22 @@
                         </div>
 
                         <!-- Orders by City -->
-                        <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex flex-col justify-between">
-                            <h3 class="text-xs font-bold text-slate-800 tracking-tight mb-2">Orders by City</h3>
-                            <div class="h-44 w-full">
-                                <canvas id="cityBarChart"></canvas>
+                        <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex flex-col h-full justify-between">
+                            <h3 class="text-xs font-bold text-slate-800 tracking-tight mb-1">Orders by City</h3>
+                            <div class="flex-1 flex items-center justify-center py-1">
+                                <div class="h-44 w-full">
+                                    <canvas id="cityBarChart"></canvas>
+                                </div>
                             </div>
                         </div>
 
                     </div>
 
                     <!-- Row 4: Top 5 Products & Order Status -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
                         
                         <!-- Top 5 Products -->
-                        <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm">
+                        <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex flex-col h-full justify-between">
                             <div class="flex items-center justify-between mb-3">
                                 <h3 class="text-xs font-bold text-slate-800 tracking-tight">Top 5 Products</h3>
                                 <a href="#" onclick="switchSection('products')" class="text-blue-600 text-xs font-semibold hover:underline flex items-center gap-1">
@@ -305,7 +307,7 @@
                                 </a>
                             </div>
                             
-                            <div class="overflow-x-auto">
+                            <div class="overflow-x-auto flex-1 flex flex-col justify-center">
                                 <table class="w-full text-left text-xs">
                                     <thead>
                                         <tr class="text-slate-400 border-b border-slate-100 font-semibold text-[11px]">
@@ -339,28 +341,28 @@
                         </div>
 
                         <!-- Order Status -->
-                        <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex flex-col justify-between">
-                            <h3 class="text-xs font-bold text-slate-800 tracking-tight mb-2">Order Status</h3>
+                        <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex flex-col h-full justify-between">
+                            <h3 class="text-xs font-bold text-slate-800 tracking-tight mb-1">Order Status</h3>
                             
-                            <div class="flex items-center gap-4">
+                            <div class="flex-1 flex items-center justify-between gap-4 py-2">
                                 <!-- Donut Chart with Center Text -->
-                                <div class="relative w-44 h-44 flex-shrink-0">
+                                <div class="relative w-36 h-36 flex-shrink-0 flex items-center justify-center">
                                     <canvas id="orderStatusChart"></canvas>
-                                    <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
-                                        <span class="text-sm font-extrabold text-slate-900 leading-tight">8,492</span>
-                                        <span class="text-[10px] text-slate-400 font-medium leading-none">Total Orders</span>
+                                    <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center select-none">
+                                        <span class="text-base font-extrabold text-slate-900 leading-tight">8,492</span>
+                                        <span class="text-[10px] text-slate-400 font-medium leading-none mt-0.5">Total Orders</span>
                                     </div>
                                 </div>
 
                                 <!-- Custom Status Legend matching UI -->
-                                <div class="flex-1 space-y-2 text-xs">
+                                <div class="flex-1 min-w-0 space-y-2.5 text-xs">
                                     {% for stat in data.order_status %}
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex items-center gap-2">
-                                            <span class="w-2 h-2 rounded-full" style="background-color: {{ stat.color }}"></span>
-                                            <span class="text-slate-600 text-[11px]">{{ stat.status }}</span>
+                                    <div class="flex items-center justify-between text-xs py-0.5">
+                                        <div class="flex items-center gap-2 min-w-0 pr-2">
+                                            <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background-color: {{ stat.color }}"></span>
+                                            <span class="text-slate-600 text-[11px] font-medium truncate">{{ stat.status }}</span>
                                         </div>
-                                        <span class="font-bold text-slate-800 text-[11px]">{{ stat.percentage }}%</span>
+                                        <span class="font-bold text-slate-800 text-[11px] flex-shrink-0 tabular-nums">{{ stat.percentage }}%</span>
                                     </div>
                                     {% endfor %}
                                 </div>
