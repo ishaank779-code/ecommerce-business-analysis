@@ -6,6 +6,8 @@
 ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.0%2B-38bdf8?logo=tailwindcss)
 ![Chart.js](https://img.shields.io/badge/Chart.js-4.0%2B-FF6384?logo=chartdotjs)
 
+![ShopVista Dashboard Preview](static/images/ui_reference.jpg)
+
 > An end-to-end, portfolio-grade **E-Commerce Business Analytics Platform** designed for Executive Stakeholders, Category Managers, and Business Analysts. Built with **Python (Flask)**, **MySQL 8.0**, **Tailwind CSS**, and **Chart.js**, delivering actionable insights across revenue, order fulfillment, product margins, return rate anomalies, and customer lifetime value (CLV).
 
 ---
